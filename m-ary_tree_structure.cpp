@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
+#include <string>
 #include <list>
 #include <iterator>
 #include <vector>
