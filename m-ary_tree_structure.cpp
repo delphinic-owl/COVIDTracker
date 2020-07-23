@@ -8,14 +8,13 @@
 #include <map>
 #include <math.h>
 #include <algorithm>
+#include <cctype>
 using namespace std;
 
 class Node
 {
 private:
 
-public:
-    //Variables may be moved to private potentially as they are only accessed in Node so far. Structure is set up so that they won't need to be accessed outside class.
     string name;
     string stateName;
     int pop;
@@ -23,47 +22,56 @@ public:
     int cases;
     int deaths;
     int primeVar;   //Weekly cases
+    int monthlyCases;
+    int weeklyDeaths;
+    int monthlyDeaths;
     vector<int> statistics;
     double relSeverity;
     bool isCountry;
     bool isState;
     Node* rootNode;
-    map<string, Node*> nodeMap;
-    vector<Node*> nodeVector;
-    vector<string> stateNames = { "Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Minor Outlying Islands", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "U.S. Virgin Islands", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming" };
+    vector<string> stateNames = { "Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Minor Outlying Islands", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "U.S. Virgin Islands", "Virgin Islands", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming" };
     //Vector contains all names of states for input
 
+public:
+
+    map<string, Node*> nodeMap;
+    vector<Node*> nodeVector;
+
+    //Constructor
+    Node() {};
+
     //Copy constructor
-    Node(const Node & node) 
+    Node(const Node &node) 
     {
-        string name = node.name;
-        string stateName = node.stateName;
-        int pop = node.pop;
-        int density = node.density;     //What is density? Like population over land area? Population over cases?
-        int cases = node.cases;
-        int deaths = node.deaths;
-        int primeVar = node.primeVar;
-        double relSeverity = node.relSeverity;
-        bool isCountry = node.isCountry;
-        bool isState = node.isState;
-        Node* rootNode = node.rootNode;
-        map<string, Node*> nodeMap = node.nodeMap;
-        vector<Node*> nodeVector = node.nodeVector;
+        name = node.name;
+        stateName = node.stateName;
+        pop = node.pop;
+        density = node.density;     //What is density? Like population over land area? Population over cases?
+        cases = node.cases;
+        deaths = node.deaths;
+        primeVar = node.primeVar;
+        monthlyCases = node.monthlyCases;
+        relSeverity = node.relSeverity;
+        isCountry = node.isCountry;
+        isState = node.isState;
+        rootNode = node.rootNode;
+        nodeMap = node.nodeMap;
+        nodeVector = node.nodeVector;
     }
 
     //Accessors
     Node* stateNode(string name) { return rootNode->nodeMap[name]; };
     Node* countyNode(string name) { return rootNode->nodeMap[name]->nodeMap[name]; };
 
-    //May want to overwrite this with another function for states
     void assignStats(Node* root, string name, vector<int> stats)
     {
         //Stats vector should be initialized with a size equal to the max number of stats. Stats can be placed into vector on importation in the correct order (i.e. "stats[0] = storedInput; stats[3] = storedInput;")
-        //This function uses vectors with 5 INTS ONLY. No less.
+        //This function uses vectors with 6 INTS ONLY. No less.
         int i = 0;
         root->statistics.clear();
         root->name = name;
-        root->statistics.push_back(stats[i]);
+        root->statistics.push_back(stoi(stats[i]));
         root->pop = stats[i++];
         root->statistics.push_back(stats[i]);
         root->density = stats[i++];
@@ -73,13 +81,19 @@ public:
         root->deaths = stats[i++];
         root->statistics.push_back(stats[i]);
         root->primeVar = stats[i++];
+        root->statistics.push_back(stats[i]);
+        root->monthlyCases = stats[i++];
+        root->statistics.push_back(stats[i]);
+        root->weeklyDeaths = stats[i++];
+        root->statistics.push_back(stats[i]);
+        root->monthlyDeaths = stats[i++];
         root->relSeverity = 0.0;
     };
 
     //This might need to be void?
     //Stats might need to be calculated when reading from file (i.e. density is a calculation, weekly cases might not be stated explicitly, and many reports are over time.
     //Stats may be changed to a vector of a vector of integers to represent stats over time (i.e. March, April, May, June)
-    Node* insert(Node* root, string name, string stateName, bool state, vector<int> stats)
+    void insert(Node* root, string name, string stateName, bool state, vector<int> stats)
     {
         Node* temp = new Node();
         assignStats(temp, name, stats);
@@ -88,7 +102,6 @@ public:
             temp->isCountry = true;
             temp->isState = false;
             temp->rootNode = temp;
-            return temp;
         }
 
         temp->isCountry = false;
@@ -99,7 +112,6 @@ public:
             temp->isState = true;
             rootNode->nodeVector.push_back(temp);
             rootNode->nodeMap.emplace(name, temp);
-            return temp;
         }
         else
         {
@@ -107,9 +119,7 @@ public:
             //In rootNode's vector, find state node pointer and push temp back into its node pointer vector
             stateNode(stateName)->nodeVector.push_back(temp);
             stateNode(stateName)->nodeMap.emplace(name, temp);
-            return temp;
         }
-        return root;
     };
 
     void sort(int n, vector<Node*>& vec);                                                       //Sorts all nodes within a vector into descending order by primeVar (weekly cases)
@@ -132,7 +142,7 @@ public:
 
 
 //The input n repesents the index of the statistic to sort by in descending order
-// 0 = pop; 1 = density; 2 = cases; 3 = deaths; 4 = primeVar (weekly cases)
+// 0 = pop; 1 = density; 2 = cases; 3 = deaths; 4 = primeVar (weekly cases); 5 monthlyCases; 6 weeklyDeaths; 7 monthlyDeaths
 // Can be changed to sort by severity score (see searchStat for example)
 void Node::sort(int n, vector<Node*>& vec)
 {
@@ -199,8 +209,8 @@ void Node::printSeverity(Node* root, bool country)
     if (root->isCountry) //if asking for country statistics, print headers, stats, and run function recursively for each state
     {
         cout << "Total Statistics for " << root->name << endl;
-        cout << "Region Name\tPopulation\tDensity\tTotal Cases\tTotal Deaths\tWeekly New Cases\tRelative Severity Score" << endl;
-        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->relSeverity << "\t" << endl;
+        cout << "Region Name\tPopulation\tDensity\tTotal Cases\tTotal Deaths\tAverage Weekly Cases\tAverage Monthly Cases\t Average Weekly Deaths\t Average Monthly Deaths\tRelative Severity Score" << endl;
+        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->monthlyCases << "\t" << root->weeklyDeaths << "\t" << root->monthlyDeaths << "\t" << root->relSeverity << "\t" << endl;
         for (auto const it = rootNode->nodeVector.begin(); it != rootNode->nodeVector.end(); it++)
         {
             printSeverity(*it, true);
@@ -209,8 +219,8 @@ void Node::printSeverity(Node* root, bool country)
     else if (!country && root->isState) //if not asking for country stats, print headers, stats, and run function recursively for each county
     {
         cout << "Total Statistics for " << root->name << endl;
-        cout << "Region Name\tPopulation\tDensity\tTotal Cases\tTotal Deaths\tWeekly New Cases\tRelative Severity Score" << endl;
-        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->relSeverity << "\t" << endl;
+        cout << "Region Name\tPopulation\tDensity\tTotal Cases\tTotal Deaths\tAverage Weekly Cases\tAverage Monthly Cases\t Average Weekly Deaths\t Average Monthly Deaths\tRelative Severity Score" << endl;
+        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->monthlyCases << "\t" << root->weeklyDeaths << "\t" << root->monthlyDeaths << "\t" << root->relSeverity << "\t" << endl;
         for (auto const it = rootNode->nodeVector.begin(); it != rootNode->nodeVector.end(); it++)
         {
             printSeverity(*it, false);
@@ -219,7 +229,7 @@ void Node::printSeverity(Node* root, bool country)
     else if (country && root->isState)  //if asking for country stats, headers have already been printed, print stats, and run recursively through each county
     {
         cout << "\nState of " << root->name << endl;
-        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->relSeverity << "\t" << endl;
+        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->monthlyCases << "\t" << root->weeklyDeaths << "\t" << root->monthlyDeaths << "\t" << root->relSeverity << "\t" << endl;
         for (auto const it = rootNode->nodeVector.begin(); it != rootNode->nodeVector.end(); it++)
         {
             printSeverity(*it, false);
@@ -227,7 +237,7 @@ void Node::printSeverity(Node* root, bool country)
     }
     else //if running through counties, simply print stats
     {
-        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->relSeverity << "\t" << endl;
+        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->monthlyCases << "\t" << root->weeklyDeaths << "\t" << root->monthlyDeaths << "\t" << root->relSeverity << "\t" << endl;
     }
 }
 
@@ -235,7 +245,7 @@ void Node::printSeverity(vector<Node*> vec, string arg)
 {
     //Header defines where the list was retrieved from (search argument). This may be adjusted to print the values from the search as well.
     cout << "Displaying all regions within the " << arg << " specifications" << endl;
-    cout << "Region Name\tPopulation\tDensity\tTotal Cases\tTotal Deaths\tWeekly New Cases\tRelative Severity Score" << endl;
+    cout << "Region Name\tPopulation\tDensity\tTotal Cases\tTotal Deaths\tAverage Weekly Cases\tAverage Monthly Cases\t Average Weekly Deaths\t Average Monthly Deaths\tRelative Severity Score" << endl;
 
     for (auto const it = vec.begin(); it != vec.end(); it++)
     {
@@ -244,7 +254,7 @@ void Node::printSeverity(vector<Node*> vec, string arg)
             cout << "\nState of " << root->name << endl;
         }
         //Function can be adjusted to only print the relevant statistics, or can continue to display all.
-        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->relSeverity << "\t" << endl;
+        cout << root->name << "\t" << root->pop << "\t" << root->density << "\t" << root->cases << "\t" << root->deaths << "\t" << root->primeVar << "\t" << root->monthlyCases << "\t" << root->weeklyDeaths << "\t" << root->monthlyDeaths << "\t" << root->relSeverity << "\t" << endl;
     }
 }
 
@@ -252,9 +262,10 @@ void Node::printSeverity(vector<Node*> vec, string arg)
 vector<Node*> Node::search(string arg, string region, int min, int max, int numberOfCounties)
 {
     vector<Node*> nullVec;
-    vector<string> opt = { "Population", "population", "Density", "density", "Cases", "cases", "Deaths", "deaths", "Weekly Cases", "weekly cases", "Severity Score", "severity score" };
+    vector<string> opt = { "population", "density", "cases", "deaths", "weekly cases", "monthly cases" , "weekly deaths", "monthly deaths" , "severity score" };
+    transform(arg.begin(), arg.end(), arg.begin(), [](unsigned char c) { c = tolower(c); });
     if (opt.find(arg) != opt.end())
-        int stat = (opt.find(arg)) / 2;
+        int stat = (opt.find(arg));
     else
         return nullVec; //Return null vector if input arg was not found
     return searchStat(stat, region, min, max, numberOfCounties);
@@ -284,9 +295,9 @@ vector<Node*> Node::searchStat(int arg, string region, int min, int max, int num
         for (auto const it = vec.begin(); it != vec.end(); it++)
         {
             //first argument tests if arg equals 5 to determine whether to check for double severity score or integer stats. Second ensures only the max number of counties are added (not including state).
-            if (arg == 5 && vecList.size() < numCounties + 1 && it->relSeverity >= min && it->relSeverity <= max)
+            if (arg == 8 && vecList.size() < numCounties + 1 && it->relSeverity >= min && it->relSeverity <= max)
                 vecList.push_back(*it);
-            if (arg != 5 && vecList.size() < numCounties + 1 && it->statistics[arg] >= min && it->statistics[arg] <= max)
+            if (arg != 8 && vecList.size() < numCounties + 1 && it->statistics[arg] >= min && it->statistics[arg] <= max)
                 vecList.push_back(*it);
         }
     }
