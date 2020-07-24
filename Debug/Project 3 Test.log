@@ -1,0 +1,4 @@
+﻿  sample_main.cpp
+  data_importation.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  data_importation.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+  Project 3 Test.vcxproj -> C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\Debug\Project 3 Test.exe

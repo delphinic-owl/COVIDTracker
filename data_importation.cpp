@@ -1,7 +1,10 @@
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include <sstream>
 #include <cstring>
 #include <string>
+#include <map>
 #include <list>
 #include <iterator>
 #include <vector>
@@ -9,30 +12,8 @@
 #include <math.h>
 #include <algorithm>
 #include <cctype>
+#include "data_importation.h"
 using namespace std;
-
-class CSVReader
-{
-private:
-	vector<string> fileNames;
-	string delimiter;
-	int linesRead;
-	map<string, vector<string>* > countyVecMap;
-
-public:
-
-	vector<vector<string>* > dataList;
-	vector<vector<string>* > incompleteList;
-
-	CSVReader(string censusFileName, string activityFileName, string deathFileName, string delm = ",")
-	{
-		fileNames = { censusFileName, activityFileName, deathFileName };
-		delimiter = delm;
-	};
-
-	void getData(int fileNum);
-	vector<string> getActiveData(ifstream file);
-};
 
 /*Total entries and indexes for:
 			(9) census data:	0 sumLev,		1 region,		2 division,		3 state,	4 county,		5 stateName,	6 countyName,	7 census2010Pop,	8 popEstimate2019
@@ -47,8 +28,6 @@ public:
 
 void CSVReader::getData(int fileNum)
 {
-	ifstream file(fileNames[fileNum]);
-
 	//Statements to determine data input based on file
 
 	ifstream file(fileNames[fileNum]);
@@ -64,11 +43,16 @@ void CSVReader::getData(int fileNum)
 
 	string line = "";
 	string entry = "";
+	int i = 0;
+	size_t pos = 0;
 	getline(file, line);			//Removes first row containing headers
-
+	cout << "Loading File Number " << fileNum + 1 << endl;
 	while (getline(file, line))		//Read first line of data
 	{
-		vector<string>* dataVec;
+		if (i == 800 || i == 1600 || i == 2400)
+			cout << "(" << (((double)i / 3200) * 100) << "%)" << endl;
+		vector<string> dataVec;
+		bool isState = true;
 
 		if (fileNum == 1)
 			dataVec = getActiveData(file);
@@ -76,58 +60,61 @@ void CSVReader::getData(int fileNum)
 		{
 			string stateName, countyName;
 			int entryNum = 0;
-			istringstream iline(line);
-			bool isState = true;
 
-			while (getline(iline, entry, delimiter))
+			while ((pos = line.find(delimiter)) != string::npos)
 			{
-
-				bool name = (stateCountyIndexes.find(entryNum) != stateCountyIndexes.end());	// identify region name input
-				bool useless = (uselessDataIndexes.find(entryNum) != uselessDataIndexes.end());	// identify useless data input
-
-				if (name)
+				entry = line.substr(0, pos);
+				//bool name = (indexIt != stateCountyIndexes.end());		// identify region name input
+				//bool useless = (indexIt2 != uselessDataIndexes.end());	// identify useless data input
+				if (entryNum == 5 || entryNum == 6)
 				{
 					if (entry.find(" County") != string::npos) { isState = false; size_t index = entry.find(" County"); entry.erase(index, string::npos); }	//Remove " County" from county names if there
 					if (stateFirst) { stateName = entry; stateFirst = false; }	//If state input comes first, assign and switch to county
 					else { countyName = entry; stateFirst = true; }			//Else, assign county name and switch to state
 				}
-				if (!useless)	//Add names last and skip useless data
-					dataVec->push_back(entry);
+				if (entryNum != 8 && !(entryNum >= 0 && entryNum <= 6))	//Add names last and skip useless data
+					dataVec.push_back(entry);
 				entryNum++;
+				line.erase(0, pos + delimiter.length());
 			}
+			dataVec.push_back(line);
 
 			//Before region names, define if state or not (some counties have the same name as their state
 			if (isState)
-				dataVec->push_back("true");
+				dataVec.push_back("true");
 			else
-				dataVec->push_back("false");
+				dataVec.push_back("false");
 
-			dataVec->push_back(stateName);
-			dataVec->push_back(countyName);
+			dataVec.push_back(stateName);
+			dataVec.push_back(countyName);
 		}
 
-		int size = dataVec->size();
-		string stateCounty = dataVec[size - 2] + dataVec[size - 1];
+		int size = dataVec.size();
+		auto namesIndex = dataVec.end() - 2;
+		string stateCounty = *namesIndex + *(namesIndex + 1);
 
 		if (firstRead)
 		{
 			dataList.push_back(dataVec);
-			if (!isState)
-				countyVecMap.emplace(stateCounty, dataVec);	//emplace "StatenameCountyname" key to vector pointer value. Does not contain states.
+			if (!isState) { countyVecMap[stateCounty] = i; }	//emplace "StatenameCountyname" key to vector pointer value. Does not contain states.
 		}
 		else if (countyVecMap.find(stateCounty) != countyVecMap.end()) //If state & county match a node from previous file, add data to it (minus region names)
 		{
 			for (int i = 0; i < size - 2; i++)
-				countyVecMap[stateCounty].push_back(dataVec[i]);
+			{
+				dataList[countyVecMap[stateCounty]].push_back(dataVec[i]);
+			}
 		}
 		else	//If region did not exist in previous file, add to incomplete list
 			incompleteList.push_back(dataVec);
+		i++;
 	}
-	if (fileNum < 2)
-		getData(fileNum++);	//Repeat for next file
+	cout << "(100%)" << endl;
+	if (fileNum < 1)	//Change this to 2 to read the third file
+		getData(++fileNum);	//Repeat for next file
 }
 
-vector<string> CSVReader::getActiveData(ifstream file)
+vector<string> CSVReader::getActiveData(ifstream &file)
 {
 	//Each county has 122 dates with 8 inputs each
 	//activity data : 0 totalCases, 1 countyName, 2 stateName, 3 date, 4 newDeaths, 5 countyNum, 6 newCases, 7 deathCount
@@ -143,39 +130,41 @@ vector<string> CSVReader::getActiveData(ifstream file)
 	
 	//Already read line 1 of 122
 
-	int stateName = "";
-	int countyName = "";
+	string stateName = "";
+	string countyName = "";
+	size_t pos = 0;
 	vector<string> dataVec;
 
 	string line = "";
-	string entry = "";
-	for (int i = 1; i < 121; i++) //skip 121 lines to last
-		getline(file, line);
-	
+	vector<string> entry;
+	while (getline(file, line) && line.find("6/30/2020") == string::npos);	//Cycle through each line until last date is found
+		
 	//Retrieve necessary values, calculate, and add them to vector:		Variable			Index
-	istringstream nline(line);
+	while (pos = line.find(delimiter) != string::npos)
+	{
+		pos = line.find(delimiter);
+		entry.push_back(line.substr(0, pos));
+		line.erase(0, pos + delimiter.size());
+	}
+	entry.push_back(line);
+	int i = 0;
+	dataVec.push_back(entry[i]);										//totalCases		0
+	dataVec.push_back(to_string(stod(entry[i]) / (122.0 / 7.0)));		//weekly cases		1
+	dataVec.push_back(to_string(stod(entry[i++]) / 4.0));				//monthly cases		2
 
-	getline(nline, entry, delimiter);
-	dataVec.push_back(stoi(entry));										//totalCases		0
-	dataVec.push_back(to_string((double)stoi(entry) / (122.0 / 7.0)));	//weekly cases		1
-	dataVec.push_back(to_string((double)stoi(entry) / 4.0));			//monthly cases		2
-
-	getline(nline, entry, delimiter); 
-	countyName = entry;					//countyName
-	getline(nline, entry, delimiter); 
-	stateName = entry;					//stateName		
+	countyName = entry[i++];					//countyName
+	stateName = entry[i++];					//stateName		
 
 	//Unused data
-	getline(nline, entry, delimiter);	//date
-	getline(nline, entry, delimiter);	//newDeaths
-	getline(nline, entry, delimiter);	//countyNum
-	getline(nline, entry, delimiter);	//newCases
+	i++;	//date
+	i++;	//newDeaths
+	i++;	//countyNum
+	i++;	//newCases
 
-	getline(nline, entry, delimiter);
-	dataVec.push_back(entry);											//totalDeaths		3
-	dataVec.push_back(to_string((double)stoi(entry) / (122.0 / 7.0)));	//weekly deaths		4
-	dataVec.push_back(to_string((double)stoi(entry) / 4.0));			//monthly deaths	5
-	dataVec.push_back("false")											//State boolean		6
+	dataVec.push_back(entry[i]);										//totalDeaths		3
+	dataVec.push_back(to_string(stod(entry[i]) / (122.0 / 7.0)));		//weekly deaths		4
+	dataVec.push_back(to_string(stod(entry[i++]) / 4.0));				//monthly deaths	5
+	dataVec.push_back("false");											//State boolean		6
 	dataVec.push_back(stateName);										//stateName			7
 	dataVec.push_back(countyName);										//countyName		8
 

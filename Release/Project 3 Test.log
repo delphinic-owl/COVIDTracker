@@ -1,0 +1,11 @@
+﻿  data_importation.cpp
+  m-ary_tree_structure.cpp
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\m-ary_tree_structure.cpp(27,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\m-ary_tree_structure.cpp(30,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\m-ary_tree_structure.cpp(181,44): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\m-ary_tree_structure.cpp(183,44): warning C4018: '<': signed/unsigned mismatch
+  sample_main.cpp
+  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
+  Generating Code...
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/OPT:ICF' specification
+  Project 3 Test.vcxproj -> C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\Release\Project 3 Test.exe
