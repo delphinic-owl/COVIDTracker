@@ -31,7 +31,9 @@ void createNodes(CSVReader* data, Node* root)
 		stateBoolean = (test[2] == "true");
 		stateName = test[3];
 		countyName = test[4];
-		if (!stateBoolean && test.size() > 5)
+        if (!stateBoolean && test.size() < 6)
+            stats.push_back(stoi(test[0]));
+        else if (!stateBoolean)
 		{
 			stats.push_back(stoi(test[0]));
 			stats.push_back(0);		//PLACEHOLDER FOR DENSITY. Still not sure how to calculate this?
