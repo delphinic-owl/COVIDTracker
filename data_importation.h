@@ -18,37 +18,52 @@ using namespace std;
 class CSVReader
 {
 private:
-	vector<string> fileNames;
-	string delimiter;
-	int linesRead;
-	map<string, int> countyVecMap;
-	int testNum = 0;
+    vector<string> fileNames;
+    string delimiter = "";
+    int linesRead = 0;
+    map<string, int> countyVecMap;
+    int testNum = 0;
 
 public:
 
-	vector<vector<string>> dataList;
-	vector<vector<string>> incompleteList;
+    vector<vector<string>> dataList;
+    vector<vector<string>> incompleteList;
 
-	CSVReader(string censusFileName, string activityFileName, string deathFileName, string delm = ",")
-	{
-		fileNames = { censusFileName, activityFileName, deathFileName };
-		delimiter = delm;
-	};
+    CSVReader(string censusFileName, string activityFileName, string deathFileName, string delm = ",")
+    {
+        fileNames = { censusFileName, activityFileName, deathFileName };
+        delimiter = delm;
+    };
 
-	void getData(int fileNum);
-	vector<string> getActiveData(ifstream &file);
-	void printData() 
-	{
-		//census data:		0 census2010Pop, 1 stateName, 2 countyName
-		//activity data:	3 totalCases, 4 weeklyCases, 5 monthlyCases, 6 totalDeaths, 7 weeklyDeaths, 8 monthlyDeaths, 9 stateBoolean
-		cout << "Census 2010 Pop\tState Name\tCounty Name\tTotal Cases\tWeekly Cases\tMonthly Cases\tTotal Deaths\tWeekly Deaths\tMonthly Deaths\tState Boolean" << endl;
-		for (auto it = dataList.begin(); it != dataList.end(); it++)
-		{
-			for (auto it2 = it->begin(); it2 != it->end(); it2++)
-			{
-				cout << *it2 << "\t";
-			}
-			cout << "\n";
-		}
-	}
+    void getData(int fileNum);
+    vector<string> getActiveData(ifstream &file);
+    void printData()
+    {
+        //census data:		0 census2010Pop, 1 stateName, 2 countyName
+        //activity data:	3 totalCases, 4 weeklyCases, 5 monthlyCases, 6 totalDeaths, 7 weeklyDeaths, 8 monthlyDeaths, 9 stateBoolean
+        int width = 25;
+        cout << left << setw(width) << "Population";
+        cout << left << setw(width) << "State Boolean";
+        cout << left << setw(width) << "State Name";
+        cout << left << setw(width) << "County Name";
+        cout << left << setw(width) << "Total Cases";
+        cout << left << setw(width) << "Weekly Cases";
+        cout << left << setw(width) << "Monthly Cases";
+        cout << left << setw(width) << "Total Deaths";
+        cout << left << setw(width) << "Weekly Deaths";
+        cout << left << setw(width) << "Monthly Deaths";
+        cout << endl;
+        int currentDataPoint = 0;
+        for (auto it = dataList.begin(); it != dataList.end(); it++)
+        {
+            for (auto it2 = it->begin(); it2 != it->end(); it2++)
+            {
+                if (currentDataPoint != 1 && currentDataPoint != 11)
+                    cout << left << setw(width) << *it2;
+                currentDataPoint++;
+            }
+            currentDataPoint = 0;
+            cout << "\n";
+        }
+    }
 };
