@@ -161,7 +161,7 @@ vector<string> CSVReader::getActiveData(ifstream &file)
     i++;	//countyNum
     i++;	//newCases
 
-    entry[i].pop_back(); // Remove /r from end of totalDeaths
+    //entry[i].pop_back(); // Remove /r from end of totalDeaths
     dataVec.push_back(entry[i]);										//totalDeaths		3
     dataVec.push_back(to_string(stod(entry[i]) / (122.0 / 7.0)));		//weekly deaths		4
     dataVec.push_back(to_string(stod(entry[i++]) / 4.0));				//monthly deaths	5

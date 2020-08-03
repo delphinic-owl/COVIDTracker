@@ -46,17 +46,21 @@ void createNodes(CSVReader* data, Node* root)
         }
         else
             stats = { 0, 0, 0, 0, 0, 0, 0, 0 };	//fill state data vector with 0s since not all data is found yet
-        root->insertNode(root, countyName, stateName, stateBoolean, stats);
+        if (stateBoolean || test.size() >= 6)
+            root->insertNode(root, countyName, stateName, stateBoolean, stats);
         i++;
     }
 }
 
 int main()
 {
-    CSVReader* data = new CSVReader("Census Data and Pop. Estimates.csv", "COVID-19-Activity Cleaned.csv", "SoonToBeNamedDeathFile");
-    data->getData(0);
     Node* root = new Node();
+
+    CSVReader* data = new CSVReader("Census Data and Pop. Estimates.csv", "COVID19 Activity Cleaned.csv", "SoonToBeNamedDeathFile");
+    data->getData(0);
     createNodes(data, root);
+
     data->printData();
+    //root->calcTotalSeverity(root);
     //root->printSeverity(root, true);
 }

@@ -18,7 +18,6 @@ class Node
 {
 private:
 
-    string name;
     string stateName;
     int pop;
     int density;
@@ -38,6 +37,7 @@ private:
 
 public:
 
+    string name;
     map<string, Node*> nodeMap;
     vector<Node*> nodeVector;
 
@@ -56,6 +56,22 @@ public:
         isCountry = 0;
         isState = 0;
         rootNode = nullptr;
+    };
+
+    Node(string name, Node* root)
+    {
+        this->name = name;
+        stateName = "";
+        pop = 0;
+        density = 0;     //What is density? Like population over land area? Population over cases?
+        cases = 0;
+        deaths = 0;
+        primeVar = 0;
+        monthlyCases = 0;
+        relSeverity = 0;
+        isCountry = 0;
+        isState = 0;
+        rootNode = root;
     };
 
     //Copy constructor
@@ -81,7 +97,7 @@ public:
     Node* stateNode(string staname) { return rootNode->nodeMap[staname]; };
     Node* countyNode(string couname) { return rootNode->nodeMap[couname]->nodeMap[couname]; };
 
-    void assignStats(Node* root, string name, vector<int> stats)
+    void assignStats(Node* root, string name, string stateName, vector<int> stats)
     {
         //Stats vector should be initialized with a size equal to the max number of stats. Stats can be placed into vector on importation in the correct order (i.e. "stats[0] = storedInput; stats[3] = storedInput;")
         //This function uses vectors with 6 INTS ONLY. No less.
@@ -113,7 +129,7 @@ public:
     void insertNode(Node* root, string name, string stateName, bool state, vector<int> stats)
     {
         Node* temp = new Node();
-        assignStats(temp, name, stats);
+        assignStats(temp, name, stateName, stats);
         if (root == nullptr)
         {
             temp->isCountry = true;
@@ -143,7 +159,7 @@ public:
 
     void sort(int n, Node* root);                                                               //Sorts all nodes under the root into descending order by primeVar (weekly cases)
     void calcTotals(string stateName);                                                          //Calculates the totals under the particular region. Accepts "country", country name, or state names.
-    void calcTotalSeverity();                                                                   //Calls the country totals function to ensure all state and country totals are found, then runs through each state->county to find severities based on primeVar (weekly cases)
+    void calcTotalSeverity(Node* root);                                                         //Calls the country totals function to ensure all state and country totals are found, then runs through each state->county to find severities based on primeVar (weekly cases)
     void printSeverity(Node* root, bool country);                                               //Prints the name of the root node, its stats, and each region below it. If the rootNode is used, will print every state and county.
     void printSeverity(vector<Node*> vec, string arg);                                          //Similar to the above function, will print the stats for each region in a vector, with states above their counties (if included).
     vector<Node*> search(string arg, string region, int min, int max, int numberOfCounties);    //Search for a particular argument in a region. Only reports the max number of counties per state

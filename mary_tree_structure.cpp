@@ -65,14 +65,17 @@ void Node::calcTotals(string stateName)
         stats[3] += (*it)->deaths;
         stats[4] += (*it)->primeVar;
     }
-    assignStats(temp, stateName, stats);
+    assignStats(temp, stateName, stateName, stats);
 }
 
-//This function should be called *AFTER* calculating totals for the entire country
-void Node::calcTotalSeverity()
+void Node::calcTotalSeverity(Node* root)
 {
-    auto states = rootNode->nodeVector;
-    double primeTotal = rootNode->primeVar; //The country only gets its stats after totalling the rest. This function will return 0 for every county if not totalled first
+    auto states = root->nodeVector;
+    for (auto it = states.begin(); it != states.end(); it++)    //Calls calctotals on every state first
+    {
+        calcTotals(it->name);
+    }
+    double primeTotal = rootNode->primeVar;
     for (auto it = states.begin(); it != states.end(); it++)
     {
         auto counties = (*it)->nodeVector;

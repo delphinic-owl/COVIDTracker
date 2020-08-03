@@ -18,7 +18,6 @@ class Node
 {
 private:
 
-    string name;
     string stateName;
     int pop;
     int density;
@@ -38,6 +37,7 @@ private:
 
 public:
 
+    string name;
     map<string, Node*> nodeMap;
     vector<Node*> nodeVector;
 
@@ -119,6 +119,7 @@ public:
             temp->isCountry = true;
             temp->isState = false;
             temp->rootNode = temp;
+            temp->name = name;
         }
 
         temp->isCountry = false;
