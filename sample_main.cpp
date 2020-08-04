@@ -20,34 +20,37 @@ void createNodes(CSVReader* data, Node* root)
     int i = 0;
     for (auto it = data->dataList.begin(); it != data->dataList.end(); it++)
     {
-        //census data:		0 census2010Pop, 1 stateName, 2 countyName
+        //census data:		0 stateName, 1 countyName, 2 2019 pop. Estimate
         //activity data:	3 totalCases, 4 weeklyCases, 5 monthlyCases, 6 totalDeaths, 7 weeklyDeaths, 8 monthlyDeaths, 9 stateBoolean
 
         string stateName;
         string countyName;
-        bool stateBoolean;
+        bool stateBoolean = false;
         vector<int> stats;
         auto test = *it;
-        stateBoolean = (test[2] == "true");
-        stateName = test[3];
-        countyName = test[4];
-        if (!stateBoolean && test.size() < 6)
-            stats.push_back(stoi(test[0]));
-        else if (!stateBoolean)
+        stateName = test[0];
+        countyName = test[1];
+        if (test.size() >= 4 && test[3] == "true")      //State data will get totaled later
         {
-            stats.push_back(stoi(test[0]));
-            stats.push_back(0);		//PLACEHOLDER FOR DENSITY. Still not sure how to calculate this?
-            stats.push_back(stoi(test[5]));
-            stats.push_back(stoi(test[6]));
-            stats.push_back(stoi(test[7]));
-            stats.push_back(stoi(test[8]));
-            stats.push_back(stoi(test[9]));
-            stats.push_back(stoi(test[10]));
+            stateBoolean = true;
+            stats = { 0, 0, 0, 0, 0, 0, 0, 0 };
         }
-        else
-            stats = { 0, 0, 0, 0, 0, 0, 0, 0 };	//fill state data vector with 0s since not all data is found yet
-        if (stateBoolean || test.size() >= 6)
-            root->insertNode(root, countyName, stateName, stateBoolean, stats);
+        else if (test.size() < 4)                       //If county data is incomplete
+            stats.push_back(stoi(test[2])); //pop.
+        else                                            //If county has all data
+        {
+            stats.push_back(stoi(test[2])); //pop.
+            stats.push_back(stoi(test[3])); //cases
+            stats.push_back(stoi(test[4])); //weeklycases
+            stats.push_back(stoi(test[5])); //monthlycases
+            stats.push_back(stoi(test[6])); //deaths
+            stats.push_back(stoi(test[7])); //weekly deaths
+            stats.push_back(stoi(test[8])); //monthly deaths
+            stats.push_back(((double)stats[3] / (double)stats[2]) * 1000.00);     //Density = total cases / population * 1000 people  AKA: Cases per 1000 people
+        }
+
+        if (stateBoolean || test.size() >= 4)   //Exclude counties with incomplete data
+            root->insertNode(root, countyName, stateName, stats);
         i++;
     }
 }
@@ -56,11 +59,12 @@ int main()
 {
     Node* root = new Node();
 
-    CSVReader* data = new CSVReader("Census Data and Pop. Estimates.csv", "COVID19 Activity Cleaned.csv", "SoonToBeNamedDeathFile");
+    CSVReader* data = new CSVReader("Census Data and Pop. Estimates.csv", "COVID19 Activity Cleaned.csv");
     data->getData(0);
     createNodes(data, root);
 
-    data->printData();
+    cout << "All done" << endl;
+    //data->printData();
     //root->calcTotalSeverity(root);
     //root->printSeverity(root, true);
 }

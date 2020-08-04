@@ -29,9 +29,9 @@ public:
     vector<vector<string>> dataList;
     vector<vector<string>> incompleteList;
 
-    CSVReader(string censusFileName, string activityFileName, string deathFileName, string delm = ",")
+    CSVReader(string censusFileName, string activityFileName, string delm = ",")
     {
-        fileNames = { censusFileName, activityFileName, deathFileName };
+        fileNames = { censusFileName, activityFileName };
         delimiter = delm;
     };
 
@@ -39,19 +39,19 @@ public:
     vector<string> getActiveData(ifstream &file);
     void printData()
     {
-        //census data:		0 census2010Pop, 1 stateName, 2 countyName
+        //census data:		0 stateName, 1 countyName, 2 2019 pop. Estimate
         //activity data:	3 totalCases, 4 weeklyCases, 5 monthlyCases, 6 totalDeaths, 7 weeklyDeaths, 8 monthlyDeaths, 9 stateBoolean
         int width = 25;
-        cout << left << setw(width) << "Population";
-        cout << left << setw(width) << "State Boolean";
         cout << left << setw(width) << "State Name";
         cout << left << setw(width) << "County Name";
+        cout << left << setw(width) << "Population";
         cout << left << setw(width) << "Total Cases";
         cout << left << setw(width) << "Weekly Cases";
         cout << left << setw(width) << "Monthly Cases";
         cout << left << setw(width) << "Total Deaths";
         cout << left << setw(width) << "Weekly Deaths";
         cout << left << setw(width) << "Monthly Deaths";
+        cout << left << setw(width) << "State Boolean";
         cout << endl;
         int currentDataPoint = 0;
         for (auto it = dataList.begin(); it != dataList.end(); it++)

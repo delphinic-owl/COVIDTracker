@@ -104,10 +104,9 @@ public:
         int i = 0;
         root->statistics.clear();
         root->name = name;
+        root->stateName = stateName;
         root->statistics.push_back(stats[i]);
         root->pop = stats[i++];
-        root->statistics.push_back(stats[i]);
-        root->density = stats[i++];
         root->statistics.push_back(stats[i]);
         root->cases = stats[i++];
         root->statistics.push_back(stats[i]);
@@ -120,37 +119,31 @@ public:
         root->weeklyDeaths = stats[i++];
         root->statistics.push_back(stats[i]);
         root->monthlyDeaths = stats[i++];
+        root->statistics.push_back(stats[i]);
+        root->density = stats[i++];
         root->relSeverity = 0.0;
     };
 
-    //This might need to be void?
-    //Stats might need to be calculated when reading from file (i.e. density is a calculation, weekly cases might not be stated explicitly, and many reports are over time.
-    //Stats may be changed to a vector of a vector of integers to represent stats over time (i.e. March, April, May, June)
-    void insertNode(Node* root, string name, string stateName, bool state, vector<int> stats)
+    void insertNode(Node* root, string name, string stateName, vector<int> stats)
     {
         Node* temp = new Node();
         assignStats(temp, name, stateName, stats);
-        if (root == nullptr)
-        {
-            temp->isCountry = true;
-            temp->isState = false;
-            temp->rootNode = temp;
-        }
-
         temp->isCountry = false;
         temp->rootNode = root;
 
-        if (state)
+        bool hasStateName = (find(root->stateNames.begin(), root->stateNames.end(), name) != root->stateNames.end());
+        bool namesMatch = (stateName == name);
+        bool doesNotExist = (root->nodeMap.find(name) == root->nodeMap.end());
+
+        if (hasStateName && namesMatch && doesNotExist)
         {
             temp->isState = true;
-            temp->rootNode = root;
             root->nodeVector.push_back(temp);
             root->nodeMap[name] = temp;
         }
-        else
+        else //Not a state, is a county
         {
             temp->isState = false;
-            temp->rootNode = root;
             //In rootNode's vector, find state node pointer and push temp back into its node pointer vector
             root->nodeMap[stateName]->nodeVector.push_back(temp);
             root->nodeMap[stateName]->nodeMap[name] = temp;

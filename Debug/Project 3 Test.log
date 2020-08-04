@@ -1,4 +1,9 @@
 ﻿  sample_main.cpp
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\sample_main.cpp(49,67): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
   data_importation.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
   data_importation.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
   Project 3 Test.vcxproj -> C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\Debug\Project 3 Test.exe
