@@ -32,14 +32,14 @@ private:
     bool isCountry;
     bool isState;
     Node* rootNode;
-    vector<string> stateNames = { "Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Minor Outlying Islands", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "U.S. Virgin Islands", "Virgin Islands", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming" };
-    //Vector contains all names of states for input
 
 public:
 
     string name;
-    map<string, Node*> nodeMap;
-    vector<Node*> nodeVector;
+    map<string, Node*> nodeMap = {};
+    vector<Node*> nodeVector = {};
+    vector<string> stateNames = { "Alabama", "Alaska", "American Samoa", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Guam", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Minor Outlying Islands", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Northern Mariana Islands", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "U.S. Virgin Islands", "Virgin Islands", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming" };
+    //Vector contains all names of states for input
 
     //Constructor
     Node()
@@ -93,9 +93,54 @@ public:
         nodeVector = node.nodeVector;
     }
 
+    ~Node()
+    {
+        for (int j = 0; j < nodeVector.size(); j++)
+        {
+            auto current = nodeVector[j];
+            for (int i = 0; i < current->nodeVector.size(); i++)
+            {
+                delete current->nodeVector[i];
+            }
+            current->nodeMap.erase(nodeMap.begin(), nodeMap.end());
+            current->stateNames.erase(stateNames.begin(), stateNames.end());
+            delete nodeVector[j];
+        }
+    }
+
     //Accessors
-    Node* stateNode(string staname) { return rootNode->nodeMap[staname]; };
-    Node* countyNode(string couname) { return rootNode->nodeMap[couname]->nodeMap[couname]; };
+    Node* stateNode(string staname) { return nodeMap[staname]; };
+    Node* countyNode(string couname) { return nodeMap[couname]->nodeMap[couname]; };
+    vector<int> stats() { return this->statistics; }
+    double prime() { return this->primeVar; }
+    double severity() { return this->relSeverity; }
+    void assignSeverity(double severity) { this->relSeverity = severity; }
+
+    //for assigning stats to a preexisting node
+    void assignStats(vector<int> stats)
+    {
+        //Stats vector should be initialized with a size equal to the max number of stats. Stats can be placed into vector on importation in the correct order (i.e. "stats[0] = storedInput; stats[3] = storedInput;")
+        //This function uses vectors with 6 INTS ONLY. No less.
+        int i = 0;
+        this->statistics.clear();
+        this->statistics.push_back(stats[i]);
+        this->pop = stats[i++];
+        this->statistics.push_back(stats[i]);
+        this->cases = stats[i++];
+        this->statistics.push_back(stats[i]);
+        this->deaths = stats[i++];
+        this->statistics.push_back(stats[i]);
+        this->primeVar = stats[i++];
+        this->statistics.push_back(stats[i]);
+        this->monthlyCases = stats[i++];
+        this->statistics.push_back(stats[i]);
+        this->weeklyDeaths = stats[i++];
+        this->statistics.push_back(stats[i]);
+        this->monthlyDeaths = stats[i++];
+        this->statistics.push_back(stats[i]);
+        this->density = stats[i++];
+        this->relSeverity = 0.0;
+    };
 
     void assignStats(Node* root, string name, string stateName, vector<int> stats)
     {

@@ -1,5 +1,7 @@
 ﻿  sample_main.cpp
-C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\sample_main.cpp(49,67): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\mary_tree_structure.h(98,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\mary_tree_structure.h(101,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\sample_main.cpp(182,67): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
           with
           [
               _Ty=int
