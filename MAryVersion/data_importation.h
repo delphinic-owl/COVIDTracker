@@ -36,6 +36,14 @@ public:
         delimiter = delm;
     };
 
+    ~CSVReader()
+    {
+        fileNames.clear();
+        countyVecMap.clear();
+        dataList.clear();
+        incompleteList.clear();
+    }
+
     void getData(int fileNum);
     vector<string> getActiveData(ifstream &file);
     void printData()

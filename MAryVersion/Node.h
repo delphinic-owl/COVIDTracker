@@ -96,16 +96,9 @@ public:
 
     ~Node()
     {
-        for (int j = 0; j < nodeVector.size(); j++)
+        for (auto it = nodeVector.begin(); it != nodeVector.end(); it++)
         {
-            auto current = nodeVector[j];
-            for (int i = 0; i < current->nodeVector.size(); i++)
-            {
-                delete current->nodeVector[i];
-            }
-            current->nodeMap.erase(nodeMap.begin(), nodeMap.end());
-            current->stateNames.erase(stateNames.begin(), stateNames.end());
-            delete nodeVector[j];
+            delete *it;
         }
     }
 
