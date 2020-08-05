@@ -24,7 +24,5 @@ public:
 	int GetPosCasesToDate();
 	int GetDayOfMonth();
 
-
-
 };
 

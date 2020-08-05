@@ -1,4 +1,5 @@
 #include "Day.h"
+#include <iostream>
 
 Day::Day()
 {
@@ -16,11 +17,12 @@ Day::Day(int dayOfMonth, int newPosCases, int newDeaths, int deathsToDate, int p
 	this->newDeaths = newDeaths;
 	this->deathsToDate = deathsToDate;
 	this->posCasesToDate = posCasesToDate;
+	nextDay = nullptr;
 }
 
 Day::~Day()
 {
-	delete nextDay;
+	//std::cout << 1;
 }
 
 void Day::SetNextDay(Day* next) 

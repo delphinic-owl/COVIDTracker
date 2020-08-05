@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <fstream>
 #include <iostream>
 #include "County.h"
 #include "State.h"
@@ -11,32 +12,29 @@ class Nation
 private:
 	State** stateMap;	//hashtable of States
 	int numStates;
-	int* countiesPerState;	//hashtable with number of counties per state;
 
 public:
 
-		/*	Constructors and Destructor	*/
+		/*===========Constructors and Destructor============*/
 
-	Nation(vector<std::pair<string, int>>& stateNumCountyPair, int numStates); //these ints are used for calculating the size of hashtables generated for countyMap and stateMap
+	Nation(std::ifstream& numCountyCSV, int numStates); //these ints are used for calculating the size of hashtables generated for countyMap and stateMap
 	Nation();
 	~Nation();
 
-		/*	Accessor Functions */
+		/*===========Accessor Functions================*/
 
 	State** GetStateMap();
 
-		/*	Behavior and Tool Functions	*/		
+		/*==================Behavior Functions===================*/		
 
 	//returns hash value for key which is determined by ASCII sum of state name characters. Only used for stateMap
-	int HashState(string& toHash);
+	int HashState(std::string& toHash, int sizeOGstr);
 
-	//returns hash value for key which is determined by ASCII sum of state name characters. Only used for countiesPerState
-	int HashNumCounties(string& toHash);
+	//appends "%" to end of string (which should be the name of a State), such that a new hashvalue can be calculated. ASCII code for % is 37, a prime number.
+	std::string Rehash(std::string toRehash) ;
 
-	//appends "!" to end of string (which should be the name of a State), such that a new hashvalue can be calculated. ASCII code for 5 is 37, a prime number.
-	string Rehash(string toRehash) ;
-
-	
+	void CompareCounties(County& county1, County& county2, int month, int startDay);
+	void CompareStates(State& state1 , State& state2, int month, int startDay);
 
 };
 
