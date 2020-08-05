@@ -192,7 +192,7 @@ public:
     void calcTotals(Node* root, string stateName);
     void calcTotalSeverity(Node* root);
     void printSeverity(Node* root, bool country, bool state);
-    void createNodes(CSVReader* data, Node* root);
+    void createNodes(CSVReader1* data, Node* root);
     void Node::PrintTotals();       //Prints total stats for one region
     void Node::PrintAllCounties();  //Prints out all counties under a state
     void Node::CompareRegions(Node& region1, Node& region2);   //Compares total stats of two states

@@ -1,11 +1,55 @@
 ﻿  sample_main.cpp
-C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\mary_tree_structure.h(98,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\mary_tree_structure.h(101,31): warning C4018: '<': signed/unsigned mismatch
-C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\sample_main.cpp(182,67): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\HashVersion\County.cpp(25,10): warning C4101: 'next': unreferenced local variable
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\HashVersion\Nation.cpp(41,20): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\HashVersion\Nation.cpp(64,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\HashVersion\State.cpp(27,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\HashVersion\State.cpp(51,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\HashVersion\State.cpp(112,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(21,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
           with
           [
               _Ty=int
           ]
-  data_importation.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  data_importation.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(22,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(23,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(24,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(39,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(40,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(41,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(42,29): warning C4244: '=': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\Node.cpp(93,67): warning C4244: 'argument': conversion from 'double' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+  sample_main.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
+  sample_main.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
   Project 3 Test.vcxproj -> C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\Debug\Project 3 Test.exe

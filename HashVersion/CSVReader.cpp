@@ -9,7 +9,7 @@
 void CSVReader::ReadCensusCSV(Nation& nation) 
 {
 	std::ifstream census;
-	census.open("Census Data and Pop. Estimates.csv");
+	census.open("HashVersion/Census Data and Pop. Estimates.csv");
 	if (!census.is_open()) 
 	{
 		std::cout << "census file not opened.\n";
@@ -71,7 +71,7 @@ void CSVReader::ReadCensusCSV(Nation& nation)
 void CSVReader::ReadActivityCSV(Nation& nation)
 {
 	std::ifstream activity;
-	activity.open("COVID-19-Activity Cleaned.csv");
+	activity.open("HashVersion/COVID-19-Activity Cleaned.csv");
 	if (!activity.is_open())
 	{
 		std::cout << "COVID Activity file not opened.";

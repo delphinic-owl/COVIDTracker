@@ -16,7 +16,7 @@
 #pragma once
 using namespace std;
 
-class CSVReader
+class CSVReader1
 {
 private:
     vector<string> fileNames;
@@ -30,13 +30,13 @@ public:
     vector<vector<string>> dataList;
     vector<vector<string>> incompleteList;
 
-    CSVReader(string censusFileName, string activityFileName, string delm = ",")
+    CSVReader1(string censusFileName, string activityFileName, string delm = ",")
     {
         fileNames = { censusFileName, activityFileName };
         delimiter = delm;
     };
 
-    ~CSVReader()
+    ~CSVReader1()
     {
         fileNames.clear();
         countyVecMap.clear();

@@ -4,31 +4,6 @@ using namespace std;
 
 //Node functions
 
-/*
-//The input n repesents the index of the statistic to sort by in descending order
-// 0 = pop; 1 = density; 2 = cases; 3 = deaths; 4 = primeVar (weekly cases); 5 monthlyCases; 6 weeklyDeaths; 7 monthlyDeaths
-// Can be changed to sort by severity score (see searchStat for example)
-void Node::sort(int n, Node* root)
-{
-    for (int i = 0; i < root->nodeVector.size() - 1; i++)
-    {
-        int swapped = 0;
-        for (int j = 0; j < root->nodeVector.size() - i - 1; j++)
-        {
-            if (root->nodeVector[j]->statistics[n] < root->nodeVector[j + 1]->statistics[n])
-            {
-                Node* temp = root->nodeVector[j];
-                root->nodeVector[j] = root->nodeVector[j + 1];
-                root->nodeVector[j + 1] = temp;
-                swapped = 1;
-            }
-        }
-        if (swapped == 0)
-            break;
-    }
-}*/
-
-
 void Node::calcTotals(Node* root, string stateName)
 {
     Node* temp = nullptr;
@@ -84,7 +59,7 @@ void Node::calcTotalSeverity(Node* root)
     }
 }
 
-void Node::createNodes(CSVReader* data, Node* root)
+void Node::createNodes(CSVReader1* data, Node* root)
 {
     int i = 0;
     for (auto it = data->dataList.begin(); it != data->dataList.end(); it++)

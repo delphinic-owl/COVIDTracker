@@ -2,7 +2,6 @@
 #include <vector>
 #include "State.h"
 using std::vector;
-const int per10k = 10000;
 
 State::State()
 {
@@ -34,7 +33,7 @@ State::~State()
 
 void State::SetPopulation(int pop)
 {
-	population = pop;
+	this->population = pop;
 }
 
 County** State::GetCountyMap()
@@ -98,10 +97,10 @@ void State::PrintWeek(int month, int startDay)
 	double dtdNorm = (double)(stateWeekData.at(3)) / this->population;
 
 	std::cout << std::setfill(' ') << std::right << std::setw(5) << " " << "[Normalized Totals: Per 10,000 People] \n";
-	std::cout << std::fixed << std::setprecision(3) << "New Cases: " << std::setw(23) << " " <<  ncNorm* per10k << " \n";
-	std::cout << std::fixed << std::setprecision(3) << "Positive Cases to Date " << std::setw(11) << " " << pscdNorm* per10k << " \n";
-	std::cout << std::fixed << std::setprecision(3) << "New Deaths: " << std::setw(22) << " " << ndNorm* per10k << " \n";
-	std::cout << std::fixed << std::setprecision(3) << "Deaths to Date " << std::setw(19) << " " << dtdNorm * per10k << " \n\n";
+	std::cout << std::fixed << std::setprecision(3) << "New Cases: " << std::setw(23) << " " <<  ncNorm* 10000 << " \n";
+	std::cout << std::fixed << std::setprecision(3) << "Positive Cases to Date " << std::setw(11) << " " << pscdNorm* 10000 << " \n";
+	std::cout << std::fixed << std::setprecision(3) << "New Deaths: " << std::setw(22) << " " << ndNorm* 10000 << " \n";
+	std::cout << std::fixed << std::setprecision(3) << "Deaths to Date " << std::setw(19) << " " << dtdNorm * 10000 << " \n\n";
 }
 
 int State::HashCounty(string& toHash, int sizeOGstr)

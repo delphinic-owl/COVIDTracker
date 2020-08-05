@@ -9,7 +9,7 @@ Nation::Nation(std::ifstream& numCountyCSV, int numStates)
 	int sizeStateTable = (int)(numStates / 0.7);
 	this->stateMap = new State*[sizeStateTable]();
 
-	numCountyCSV.open("Number of Counties Per State.csv");
+	numCountyCSV.open("HashVersion/Number of Counties Per State.csv");
 	if (!numCountyCSV.is_open())
 	{
 		std::cout << "Counties Per State file not opened.";

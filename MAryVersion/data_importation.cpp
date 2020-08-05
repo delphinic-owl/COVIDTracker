@@ -6,11 +6,11 @@ using namespace std;
 			(5) activity data:	0 totalCases,	1 countyName,	2 stateName,	3 date,		4 deathCount
 */
 
-void CSVReader::getData(int fileNum)
+void CSVReader1::getData(int fileNum)
 {
     timer t;
     t.Start();
-    ifstream file(fileNames[fileNum]);
+    ifstream file("MAryVersion/" + fileNames[fileNum]);
 
     //census data:		0 stateName, 1 countyName, 2 2019 pop. estimate, (3 stateBoolean if true)
     //activity data:	3 totalCases, 4 weeklyCases, 5 monthlyCases, 6 totalDeaths, 7 weeklyDeaths, 8 monthlyDeaths
@@ -79,7 +79,7 @@ void CSVReader::getData(int fileNum)
         getData(++fileNum);	//Repeat for next file
 }
 
-vector<string> CSVReader::getActiveData(ifstream &file)
+vector<string> CSVReader1::getActiveData(ifstream &file)
 {
     //Each county has 122 dates with 8 inputs each
     //activity data : 0 totalCases, 1 countyName, 2 stateName, 3 date, 4 newDeaths, 5 countyNum, 6 newCases, 7 deathCount
