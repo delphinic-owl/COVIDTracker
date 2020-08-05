@@ -1,0 +1,2 @@
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\x64\Debug\Project 3 Test.exe
+C:\Users\susie\OneDrive\Homework\COP3530\COP3530Project3\MAryVersion\x64\Debug\Project 3 Test.pdb
