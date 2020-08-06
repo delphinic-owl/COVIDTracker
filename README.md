@@ -1,13 +1,11 @@
-# COP3530Project3
-Night House Coronavirus Task Force
-Parker Hovis, Paolo Colmenares, Timothy Beavers
+================================Read Me==============================================
 
-Summary: We've used two structures to organize, sort, and search imported census and COVID-19 data. Structures used are an m-ary search tree and hashtable.
+We have not implemented building of the project from the command line- with a 
+makefile for instance; however, if one runs "Main.cpp" in a C++ compiler while "Main.cpp" is in the 
+same folder as the rest of the files extracted from this zipped folder; it should build and run fine. 
+Preferably this should be done in VS Studio or an equivalent as that was the IDE in which we did 
+all of this.
 
-//Following this section will be instructions for using our code.
 
-//Please review how to use branches in the guide so we can make changes without overwriting previous files and also view a summary of the changes made to each file.
-
-//As this is only my second time using github, I'm practicing on this readme.
-
-// I am testing github
+There indeed seemingly duplicates of the .csv files; however, there are minute differences
+bwteen them that we didn't have time to reconicle our respective paths with.
